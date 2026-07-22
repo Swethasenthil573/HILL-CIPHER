@@ -29,6 +29,7 @@ STEP-4: Multiply the two matrices to obtain the cipher text of length three.
 STEP-5: Combine all these groups to get the complete cipher text.
 
 ## PROGRAM 
+~~~
 #include <stdio.h>
 #include <string.h>
 int main() {
@@ -62,6 +63,7 @@ int main() {
     printf("\n");
     return 0;
 }
+~~~
 ## OUTPUT
 <img width="1466" height="695" alt="Screenshot 2026-07-22 113226" src="https://github.com/user-attachments/assets/98654d00-0122-480c-81bf-179755c99b53" />
 
