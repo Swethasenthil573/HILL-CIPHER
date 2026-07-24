@@ -25,41 +25,88 @@ STEP-5: Combine all these groups to get the complete cipher text.
 
 ## PROGRAM 
 ~~~
-#include <stdio.h>
-#include <string.h>
-int main() {
-    unsigned int key[3][3] = { {6,24,1}, {13,16,10}, {20,17,15} };     
-    unsigned int invKey[3][3] = { {8,5,10}, {21,8,21}, {21,12,8} };   
-    unsigned int num[3], res[3];
-    char msg[4]; 
-    int i, j, t;
-    printf("Enter a 3-letter word: ");
-    scanf("%3s", msg);
-    if(strlen(msg)!=3){
-        printf("Error: Input must be exactly 3 letters.\n");
-        return 1;
-    }
-    for(i=0;i<3;i++) num[i] = msg[i]-'A';
-    for(i=0;i<3;i++){
-        t=0;
-        for(j=0;j<3;j++) t += key[i][j]*num[j];
-        res[i] = t%26;
-    }
-    printf("\nEncrypted Cipher Text: ");
-    for(i=0;i<3;i++) printf("%c", res[i]+'A');
-
-    for(i=0;i<3;i++){
-        t=0;
-        for(j=0;j<3;j++) t += invKey[i][j]*res[j];
-        num[i] = t%26;
-    }
-    printf("\nDecrypted Plain Text: ");
-    for(i=0;i<3;i++) printf("%c", num[i]+'A');
-    printf("\n");
-    return 0;
+#include <stdio.h> 
+#include <string.h> 
+#include <ctype.h> 
+int keymat[3][3] = { 
+{ 17, 17, 5 }, 
+{ 21, 18, 21 }, 
+{ 2, 2, 19 } 
+}; 
+int invkeymat[3][3] = { 
+{ 4, 9, 15 }, 
+{ 15, 17, 6 }, 
+{ 24, 0, 17 } 
+}; 
+char key[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+void encode(char *ret, char a, char b, char c) { 
+int x, y, z; 
+int posa = (int)a - 65; 
+int posb = (int)b - 65; 
+int posc = (int)c - 65; 
+x = posa * keymat[0][0] + posb * keymat[1][0] + posc * keymat[2][0]; 
+y = posa * keymat[0][1] + posb * keymat[1][1] + posc * keymat[2][1]; 
+z = posa * keymat[0][2] + posb * keymat[1][2] + posc * keymat[2][2]; 
+ret[0] = key[x % 26]; 
+ret[1] = key[y % 26]; 
+ret[2] = key[z % 26]; 
+ret[3] = '\0'; 
+} 
+void decode(char *ret, char a, char b, char c) { 
+int x, y, z; 
+int posa = (int)a - 65; 
+int posb = (int)b - 65; 
+int posc = (int)c - 65; 
+x = posa * invkeymat[0][0] + posb * invkeymat[1][0] + posc * invkeymat[2][0]; 
+y = posa * invkeymat[0][1] + posb * invkeymat[1][1] + posc * invkeymat[2][1]; 
+z = posa * invkeymat[0][2] + posb * invkeymat[1][2] + posc * invkeymat[2][2]; 
+ret[0] = key[(x % 26 < 0) ? (26 + x % 26) : (x % 26)]; 
+ret[1] = key[(y % 26 < 0) ? (26 + y % 26) : (y % 26)]; 
+ret[2] = key[(z % 26 < 0) ? (26 + z % 26) : (z % 26)]; 
+ret[3] = '\0'; 
+} 
+ 
+int main() { 
+    char msg[1000]; 
+    char enc[1000] = ""; 
+    char dec[1000] = ""; 
+    int n; 
+     
+    printf("Enter text:"); 
+    scanf("%s",msg); 
+    printf("Simulation of Hill Cipher\n"); 
+     
+     
+    for (int i = 0; i < strlen(msg); i++) { 
+        msg[i] = toupper(msg[i]); 
+    } 
+     
+    n = strlen(msg) % 3; 
+    if (n != 0) { 
+        for (int i = 1; i <= (3 - n); i++) { 
+            strcat(msg, "X"); 
+        } 
+    } 
+     
+    printf("Padded message : %s\n", msg); 
+     
+    for (int i = 0; i < strlen(msg); i += 3) { 
+char temp[4]; 
+encode(temp, msg[i], msg[i + 1], msg[i + 2]); 
+strcat(enc, temp); 
+} 
+printf("Encoded message : %s\n", enc); 
+for (int i = 0; i < strlen(enc); i += 3) { 
+char temp[4]; 
+decode(temp, enc[i], enc[i + 1], enc[i + 2]); 
+strcat(dec, temp); 
+} 
+printf("Decoded message : %s\n", dec); 
+return 0; 
 }
 ~~~
 ## OUTPUT
-<img width="1466" height="695" alt="Screenshot 2026-07-22 113226" src="https://github.com/user-attachments/assets/98654d00-0122-480c-81bf-179755c99b53" />
+<img width="1567" height="665" alt="image" src="https://github.com/user-attachments/assets/bdc91518-dcbb-4feb-b262-6fa89c0debed" />
 
 ## RESULT
+Thus, implemented the hill cipher substitution techniques using  C program.
